@@ -14,8 +14,15 @@ Inicializar um projeto cdk com java: `cdk init app --language java`. Obs.: o nom
 
 ### Alguns conceitos
 
+* **CloudFormation**: serviço que permite modelar, provisionar e gerenciar recursos da AWS e de terceiros ao tratar infraestrutura como código, do inglês *Infrastructure as Code* (IaC). Você submete um *template* (arquivo .json ou .yaml) ao CloudFormation
+
 * **Task definition**: é a definição de como a nossa aplicação vai ser executada a partir da imagem Docker, definindo recursos computacionais como CPU e memória, configurações de variáveis de ambiente, etc;
 
 * **Service**: tem a função de garantir execução das *tasks* mantendo a quantidade correta de instâncias em execução. Também controla o processo de *deployment* de novas versões da definição da *task definition*;
 
 * **Auto Scaling**: permite aumentar ou diminuir o número de instâncias da aplicação em execução de acordo com alguma métrica definida, como utilização de CPU.
+
+### Como executar a aplicação aws_projeto01 na máquina local com o docker
+
+- Execute o arquivo `compile.sh` que está na raiz do projeto;
+- Execute o arquivo `run-container.sh` também presente na raiz do projeto.
