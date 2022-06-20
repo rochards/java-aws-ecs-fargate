@@ -16,8 +16,13 @@ public class VpcStack extends Stack {
     public VpcStack(final Construct scope, final String id, final StackProps props) {
         super(scope, id, props);
 
+        /*
+        * O objeto abaixo com esses parâmetros vai criar: 2 subnets (2 pública e 2 privada), route table, fará associações
+        * entre a subnets e route tables, natGateway, internetGateway, EIP.
+        * Todos os recursos tem um prefixo AWS:EC2. Ex.: AWS::EC2::RouteTable, AWS::EC2::VPCGatewayAttachment
+        * */
         this.vpc = Vpc.Builder.create(this, "Vpc01")
-                .maxAzs(1)
+                .maxAzs(3)
                 .build();
     }
 
