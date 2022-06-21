@@ -50,7 +50,14 @@ Inicializar um projeto cdk com java: `cdk init app --language java`. Obs.: o nom
         .build();
     ``` 
     cria várias recursos por *default*:
-    - ***Subnets*** públicas e privadas:
-    - ***Route Tables***: 
-    - ***NATGateway***:
-    - ***InternetGateway***:
+    - ***Subnets*** públicas e privadas: uma *subnet* ou sub-rede é uma rede menor dentro da sua rede maior, sendo essa última a VPC. Você utiliza a *subnet* pública para criar recursos que devem ter conexão com a internet, e *subnet* privada para aqueles que não serão conectados à internet;
+    - ***Route Tables***: uma *route table* contém um conjunto de regras (rotas) que determinam para onde o tráfego da sua *subnet* ou *gateway* é direcionado;
+    - ***NATGateway***: um NAT (Network Addres Translation) gateway na AWS é um serviço que permite instâncias numa *subnet* privada se conectarem com serviços externos à sua VPC, porém esses serviços externos não conseguem iniciar uma conexão com as suas instâncias;
+    - ***InternetGateway***: é um componente que permite comunicação entre sua VPC e a internet. Um internet *gateway* permite que recursos, como instâncias EC2, em sua *subnet* pública se conectem à internet. Por outro lado, permite também que suas instâncias recebem conexões da internet, por exemplo, você pode se conectar uma instância EC2 na AWS utilizando seu computador pessoal.
+
+
+### Fontes:
+- https://docs.aws.amazon.com/vpc/latest/userguide/configure-subnets.html
+- https://docs.aws.amazon.com/vpc/latest/userguide/VPC_Route_Tables.html
+- https://docs.aws.amazon.com/vpc/latest/userguide/vpc-nat-gateway.html
+- https://docs.aws.amazon.com/vpc/latest/userguide/VPC_Internet_Gateway.html
