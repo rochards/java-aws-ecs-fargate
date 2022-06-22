@@ -36,7 +36,8 @@ Inicializar um projeto cdk com java: `cdk init app --language java`. Obs.: o nom
 - `$ cdk bootstrap`: cria as *roles* com as permissões necessárias para que o CDK faça *deploy* dos recursos;
 - `$ cdk deploy nome_stack1 nome_stack2`: faz o *deploy* das *stacks* na sua conta AWS;
 - `$ cdk destroy nome_stack1 nome_stack2`: apaga as *stacks* listadas da sua conta AWS;
-- `$ cdk list`: lista as *stacks* que existem dentro do seu projeto
+- `$ cdk list`: lista as *stacks* que existem dentro do seu projeto;
+- `$ cdk diff`: mostra a diferença entre a sua *stack* definida pelo seu código local e os recursos criados na AWS.
 
 
 ### O que fui observando durante o curso

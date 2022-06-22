@@ -31,14 +31,16 @@ public class Service01Stack extends Stack {
                         .taskImageOptions(
                                 ApplicationLoadBalancedTaskImageOptions.builder()
                                         .containerName("aws_projeto01")
-                                        .image(ContainerImage.fromRegistry("rochards/java-app-aws-projeto01:1.0.0")) // caminho da imagem
+                                        .image(ContainerImage.fromRegistry("rochards/java-app-aws-projeto01:latest")) // caminho da imagem
                                         // e tag do dockerhub
                                         .containerPort(8080) // porta da nossa aplicacao springboot dentro do container
-                                        .logDriver(LogDriver.awsLogs( // os logs serão direcionados para o cloud watch
+                                        .logDriver(
+                                                LogDriver.awsLogs( // os logs serão direcionados para o cloud watch
                                                         AwsLogDriverProps.builder()
                                                                 .logGroup(
                                                                         LogGroup.Builder.create(this, "Service01LogGroup")
                                                                                 .logGroupName("Service01")
+                                                                                // abaixo indica que quando eu apagar a stack, os logs tbm serão
                                                                                 .removalPolicy(RemovalPolicy.DESTROY)
                                                                                 .build()
                                                                 )
@@ -62,7 +64,7 @@ public class Service01Stack extends Stack {
         ScalableTaskCount scalableTaskCount = service01.getService().autoScaleTaskCount(
                 EnableScalingProps.builder()
                         .minCapacity(1)
-                        .maxCapacity(4)
+                        .maxCapacity(3)
                         .build()
         );
 

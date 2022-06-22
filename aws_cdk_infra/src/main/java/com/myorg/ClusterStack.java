@@ -19,7 +19,7 @@ public class ClusterStack extends Stack {
 
         this.cluster = Cluster.Builder.create(this, id)
                 .clusterName("cluster-01")
-                .vpc(vpc)
+                .vpc(vpc) // aqui fica explícito que o cluster precisa ser criado dentro de uma VPC
                 .build();
     }
 

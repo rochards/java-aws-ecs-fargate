@@ -12,9 +12,11 @@ public class AwsCdkInfraApp {
 
         VpcStack vpcStack = new VpcStack(app, "Vpc");
 
+        // depois de criado, vá ao serviço ECS (Elastic Container Service) para ver o cluster
         ClusterStack clusterStack = new ClusterStack(app, "Cluster", vpcStack.getVpc());
         clusterStack.addDependency(vpcStack);
 
+        // depois de criado, vá ao ECS e clique no cluster criado para ver os serviços
         Service01Stack service01Stack = new Service01Stack(app, "Service01", clusterStack.getCluster());
         service01Stack.addDependency(clusterStack);
 
