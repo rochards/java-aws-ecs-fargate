@@ -56,6 +56,8 @@ Inicializar um projeto cdk com java: `cdk init app --language java`. Obs.: o nom
     - ***NATGateway***: um NAT (Network Addres Translation) gateway na AWS é um serviço que permite instâncias numa *subnet* privada se conectarem com serviços externos à sua VPC, porém esses serviços externos não conseguem iniciar uma conexão com as suas instâncias;
     - ***InternetGateway***: é um componente que permite comunicação entre sua VPC e a internet. Um internet *gateway* permite que recursos, como instâncias EC2, em sua *subnet* pública se conectem à internet. Por outro lado, permite também que suas instâncias recebem conexões da internet, por exemplo, você pode se conectar uma instância EC2 na AWS utilizando seu computador pessoal.
 
+- Quando criar a *stack* do serviço, por exemplo o `Service01`, ao final é apresentado no console o DNS para vc fazer chamadas ao serviço, ex.: `http://Servi-ALB01-XXXXXXXXXX-0000000000.sa-east-1.elb.amazonaws.com`. Basta fazer a chamada passando a porta `8080`;
+
 
 ### Fontes:
 - https://docs.aws.amazon.com/vpc/latest/userguide/configure-subnets.html
