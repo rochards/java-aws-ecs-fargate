@@ -1,6 +1,7 @@
 package com.myorg;
 
 import software.amazon.awscdk.Duration;
+import software.amazon.awscdk.Fn;
 import software.amazon.awscdk.RemovalPolicy;
 import software.amazon.awscdk.Stack;
 import software.amazon.awscdk.StackProps;
@@ -11,6 +12,9 @@ import software.amazon.awscdk.services.ecs.patterns.ApplicationLoadBalancedTaskI
 import software.amazon.awscdk.services.elasticloadbalancingv2.HealthCheck;
 import software.amazon.awscdk.services.logs.LogGroup;
 import software.constructs.Construct;
+
+import java.util.HashMap;
+import java.util.Map;
 
 public class Service01Stack extends Stack {
     public Service01Stack(final Construct scope, final String id, Cluster cluster) {
@@ -47,7 +51,9 @@ public class Service01Stack extends Stack {
                                                                 .streamPrefix("Service01")
                                                                 .build()
                                                 )
-                                        ).build()
+                                        )
+                                        .environment(retrieveAndConfigureRdsStackParameters())
+                                        .build()
                         )
                         .publicLoadBalancer(true)
                         .build();
@@ -73,5 +79,18 @@ public class Service01Stack extends Stack {
                 .scaleInCooldown(Duration.seconds(60))
                 .scaleOutCooldown(Duration.seconds(60))
                 .build());
+    }
+
+    private Map<String, String> retrieveAndConfigureRdsStackParameters() {
+        Map<String, String> envVariables = new HashMap<>();
+        // As variáveis abaixo são padrões do spring boot
+        // o nome rds-endpoint foi definido na classe RdsStack
+        envVariables.put("SPRING_DATASOURCE_URL", "jdbc:mariadb://" + Fn.importValue("rds-endpoint")
+                + ":3306/aws_projeto01?createDatabaseIfNotExist=true");
+        envVariables.put("SPRING_DATASOURCE_USERNAME", "admin"); // admin tbm foi definido na classe RdsStack
+        // o nome rds-password foi definido na classe RdsStack
+        envVariables.put("SPRING_DATASOURCE_PASSWORD", Fn.importValue("rds-password"));
+
+        return envVariables;
     }
 }

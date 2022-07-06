@@ -27,6 +27,7 @@ import java.util.Collections;
 public class RdsStack extends Stack {
 
     private final DatabaseInstance databaseInstance;
+    private final CfnParameter passwordParameter;
 
     public RdsStack(final Construct scope, final String id, final Vpc vpc) {
         this(scope, id, vpc, null);
@@ -35,7 +36,11 @@ public class RdsStack extends Stack {
     public RdsStack(final Construct scope, final String id, final Vpc vpc, final StackProps props) {
         super(scope, id, props);
 
+        // o método createRdsPasswordParameter() só pode ser executado uma vez, por isso deve estar numa variável para ser reutilizado
+        this.passwordParameter = createRdsPasswordParameter();
         this.databaseInstance = configureRdsInstance(vpc, id);
+        exportRdsEndpoint();
+        exportRdsPassword();
     }
 
     private DatabaseInstance configureRdsInstance(Vpc vpc, String id) {
@@ -48,7 +53,7 @@ public class RdsStack extends Stack {
                                 .build()
                 ))
                 .vpc(vpc)
-                .credentials(createRdsUsername())
+                .credentials(createRdsCredentials())
                 .instanceType(InstanceType.of(InstanceClass.BURSTABLE2, InstanceSize.MICRO))
                 .multiAz(false)
                 .allocatedStorage(10) // GB
@@ -60,6 +65,9 @@ public class RdsStack extends Stack {
     }
 
     private CfnParameter createRdsPasswordParameter() {
+        /* passamos o valor dessa variável no momento do deploy. Ex:
+        * cdk deploy --parameters Rds:databasePassword=.,0374koar872jkas
+        * */
         return CfnParameter.Builder
                 .create(this, "databasePassword")
                 .type("String")
@@ -67,10 +75,10 @@ public class RdsStack extends Stack {
                 .build();
     }
 
-    private Credentials createRdsUsername() {
+    private Credentials createRdsCredentials() {
         return Credentials.fromUsername("admin",
                 CredentialsFromUsernameOptions.builder()
-                        .password(SecretValue.plainText(createRdsPasswordParameter().getValueAsString()))
+                        .password(SecretValue.plainText(this.passwordParameter.getValueAsString()))
                         .build()
         );
     }
@@ -84,19 +92,19 @@ public class RdsStack extends Stack {
         return iSecurityGroup;
     }
 
-    public CfnOutput getRdsEndpoint() {
-        return CfnOutput.Builder
+    private void exportRdsEndpoint() {
+        CfnOutput.Builder
                 .create(this, "rds-endpoint")
                 .exportName("rds-endpoint")
                 .value(this.databaseInstance.getDbInstanceEndpointAddress())
                 .build();
     }
 
-    public CfnOutput getRdsPassword() {
-        return CfnOutput.Builder
+    private void exportRdsPassword() {
+        CfnOutput.Builder
                 .create(this, "rds-password")
                 .exportName("rds-password")
-                .value(createRdsPasswordParameter().getValueAsString())
+                .value(this.passwordParameter.getValueAsString())
                 .build();
     }
 }
