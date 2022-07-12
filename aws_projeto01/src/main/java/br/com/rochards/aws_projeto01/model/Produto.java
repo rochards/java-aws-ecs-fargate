@@ -25,6 +25,6 @@ public class Produto {
     @Column(length = 8, nullable = false, unique = true)
     private String codigo;
 
-    @Column(precision = 2)
+    @Column(precision = 10, scale = 2)
     private BigDecimal preco;
 }

@@ -58,6 +58,10 @@ Inicializar um projeto cdk com java: `cdk init app --language java`. Obs.: o nom
 
 - Quando criar a *stack* do serviço, por exemplo o `Service01`, ao final é apresentado no console o DNS para vc fazer chamadas ao serviço, ex.: `http://Servi-ALB01-XXXXXXXXXX-0000000000.sa-east-1.elb.amazonaws.com`. Basta fazer a chamada passando a porta `8080`;
 
+- Caso esteja executando  o `aws_projeto01` no Intellij IDEA, podemos passar as variáveis de ambiente pela própria IDE para testes locais. Utilizei as seguintes variáveis, que estão definidas no `application.properties` do projeto: `SPRING_DATASOURCE_URL=jdbc:mariadb://localhost:3306/aws_projeto01?createDatabaseIfNotExist=true;SPRING_DATASOURCE_USERNAME=root;SPRING_DATASOURCE_PASSWORD=root`;
+- Para subir um MySQL local no Docker, podemos fazer `$ docker run --name localdb -e MYSQL_ROOT_PASSWORD=root -d -p 3306:3306 mysql:5.7`. 
+   - OBS.: em versões mais recentes do MySQL há um erro de chave RSA -> https://github.com/metabase/metabase/issues/12545
+
 
 ### Fontes:
 - https://docs.aws.amazon.com/vpc/latest/userguide/configure-subnets.html

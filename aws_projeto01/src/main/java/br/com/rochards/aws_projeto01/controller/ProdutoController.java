@@ -39,7 +39,7 @@ public class ProdutoController {
                 .orElseGet(() -> ResponseEntity.notFound().build());
     }
 
-    @GetMapping("/{codigo}")
+    @GetMapping("/codigo/{codigo}")
     public ResponseEntity<Produto> buscaPorCodigo(@PathVariable String codigo) {
         var optProduto = repository.findByCodigo(codigo);
         return optProduto.map(ResponseEntity::ok)
