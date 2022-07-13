@@ -35,7 +35,7 @@ public class Service01Stack extends Stack {
                         .taskImageOptions(
                                 ApplicationLoadBalancedTaskImageOptions.builder()
                                         .containerName("aws_projeto01")
-                                        .image(ContainerImage.fromRegistry("rochards/java-app-aws-projeto01:latest")) // caminho da imagem
+                                        .image(ContainerImage.fromRegistry("rochards/java-app-aws-projeto01:2.0.0")) // caminho da imagem
                                         // e tag do dockerhub
                                         .containerPort(8080) // porta da nossa aplicacao springboot dentro do container
                                         .logDriver(

@@ -29,6 +29,7 @@ Inicializar um projeto cdk com java: `cdk init app --language java`. Obs.: o nom
 ### Como executar a aplicação aws_projeto01 na máquina local com o docker
 
 - Execute o arquivo `compile.sh` que está na raiz do projeto;
+  - OBS.: esse arquivo executa os testes do *maven*, então é preciso ter um banco de dados local para não ser lançada uma exceção ao subir a aplicação Spring.
 - Execute o arquivo `run-container.sh` também presente na raiz do projeto.
 
 ### Como fazer o *deploy* da infraestrutura, descrita na pasta `aws_cdk_infra`, na AWS
