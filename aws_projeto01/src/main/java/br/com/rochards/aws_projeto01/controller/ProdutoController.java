@@ -1,7 +1,9 @@
 package br.com.rochards.aws_projeto01.controller;
 
+import br.com.rochards.aws_projeto01.enums.EventType;
 import br.com.rochards.aws_projeto01.model.Produto;
 import br.com.rochards.aws_projeto01.repository.ProdutoRepository;
+import br.com.rochards.aws_projeto01.service.ProductPublisher;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -14,16 +16,18 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.util.UriComponentsBuilder;
 
-import java.util.Optional;
-
 @RestController
 @RequestMapping("/api/v1/produtos")
 public class ProdutoController {
 
+    private static final String JAVA_APP_NAME = "Projeto01App";
+
+    private final ProductPublisher publisher;
     private final ProdutoRepository repository;
 
     @Autowired
-    private ProdutoController(ProdutoRepository repository) {
+    private ProdutoController(ProductPublisher publisher, ProdutoRepository repository) {
+        this.publisher = publisher;
         this.repository = repository;
     }
 
@@ -51,6 +55,9 @@ public class ProdutoController {
     public ResponseEntity<?> salvaProduto(@RequestBody Produto produto, UriComponentsBuilder uriBuilder) {
         var produtoSalvo = repository.save(produto);
         var location = uriBuilder.path("/api/v1/produtos/{id}").build(produtoSalvo.getId());
+
+        publisher.publishEventProduct(produtoSalvo, EventType.PRODUTO_CRIADO, JAVA_APP_NAME);
+
         return ResponseEntity.created(location).build();
     }
 
@@ -59,7 +66,9 @@ public class ProdutoController {
     public ResponseEntity<?> atualizaProduto(@RequestBody Produto produto, @PathVariable long id) {
         if (repository.existsById(id)) {
             produto.setId(id);
-            repository.save(produto);
+            var produtoAtualizado = repository.save(produto);
+
+            publisher.publishEventProduct(produtoAtualizado, EventType.PRODUTO_ATUALIZADO, JAVA_APP_NAME);
 
             return ResponseEntity.ok().build();
         }
@@ -72,6 +81,9 @@ public class ProdutoController {
         var optProduto = repository.findById(id);
         return optProduto.map(produto -> {
             repository.delete(produto);
+
+            publisher.publishEventProduct(produto, EventType.PRODUTO_DELETADO, JAVA_APP_NAME);
+
             return ResponseEntity.ok(produto);
         }).orElseGet(() -> ResponseEntity.notFound().build());
     }

@@ -28,6 +28,8 @@ public class AwsCdkInfraApp {
         RdsStack rdsStack = new RdsStack(app, "Rds", vpcStack.getVpc());
         rdsStack.addDependency(vpcStack);
 
+        SnsStack snsStack = new SnsStack(app, "Sns");
+
         // depois de criado, vá ao ECS e clique no cluster criado para ver os serviços
         Service01Stack service01Stack = new Service01Stack(app, "Service01", clusterStack.getCluster());
         service01Stack.addDependency(clusterStack);
