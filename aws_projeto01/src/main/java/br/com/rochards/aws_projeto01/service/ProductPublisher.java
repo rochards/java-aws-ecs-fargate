@@ -37,8 +37,11 @@ public class ProductPublisher {
         var optEnvelopeString = toJsonString(envelope);
 
         optEnvelopeString.ifPresentOrElse(
-                envelopeString -> snsClient.publish(topicEventProduct.getTopicArn(), envelopeString),
-                () -> LOG.error("Falha ao publicar evento de produto")
+                envelopeString -> {
+                    snsClient.publish(topicEventProduct.getTopicArn(), envelopeString);
+                    LOG.info("Evento de produto publicado com sucesso no SNS");
+                },
+                () -> LOG.error("Falha ao publicar evento de produto no SNS")
         );
     }
 

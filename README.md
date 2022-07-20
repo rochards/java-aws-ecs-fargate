@@ -63,8 +63,8 @@ Inicializar um projeto cdk com java: `cdk init app --language java`. Obs.: o nom
 - Para subir um MySQL local no Docker, podemos fazer `$ docker run --name localdb -e MYSQL_ROOT_PASSWORD=root -d -p 3306:3306 mysql:5.7`. 
    - OBS.: em versões mais recentes do MySQL há um erro de chave RSA -> https://github.com/metabase/metabase/issues/12545;
 
-- Há umas classes de configurações para executar o projeto no *localstack*. Faz-se necessário passar a variável de ambiente `SPRING_PROFILES_ACTIVE=local` para o Intellij.
-
+- Há umas classes de configurações no projeto aws_projeto01 para que ele seja executado no *localstack*. Faz-se necessário passar a variável de ambiente `SPRING_PROFILES_ACTIVE=local` para o Intellij;
+- Para executar o *localstack* no Docker, basta: `$ docker run --rm -p 4566:4566 -p 4571:4571 localstack/localstack -e "SERVICES=sns,sqs,dynamodb,s3"`. Dentro da variável `SERVICES` estão os serviços que o projeto precisa.
 
 ### Fontes:
 - https://docs.aws.amazon.com/vpc/latest/userguide/configure-subnets.html

@@ -6,25 +6,35 @@ import software.amazon.awscdk.RemovalPolicy;
 import software.amazon.awscdk.Stack;
 import software.amazon.awscdk.StackProps;
 import software.amazon.awscdk.services.applicationautoscaling.EnableScalingProps;
-import software.amazon.awscdk.services.ecs.*;
+import software.amazon.awscdk.services.ecs.AwsLogDriverProps;
+import software.amazon.awscdk.services.ecs.Cluster;
+import software.amazon.awscdk.services.ecs.ContainerImage;
+import software.amazon.awscdk.services.ecs.CpuUtilizationScalingProps;
+import software.amazon.awscdk.services.ecs.LogDriver;
+import software.amazon.awscdk.services.ecs.ScalableTaskCount;
 import software.amazon.awscdk.services.ecs.patterns.ApplicationLoadBalancedFargateService;
 import software.amazon.awscdk.services.ecs.patterns.ApplicationLoadBalancedTaskImageOptions;
 import software.amazon.awscdk.services.elasticloadbalancingv2.HealthCheck;
+import software.amazon.awscdk.services.events.targets.SnsTopic;
 import software.amazon.awscdk.services.logs.LogGroup;
 import software.constructs.Construct;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 
 public class Service01Stack extends Stack {
-    public Service01Stack(final Construct scope, final String id, Cluster cluster) {
-        this(scope, id, null, cluster);
+
+    private final ApplicationLoadBalancedFargateService service01;
+
+    public Service01Stack(final Construct scope, final String id, Cluster cluster, SnsTopic productEventsTopic) {
+        this(scope, id, null, cluster, productEventsTopic);
     }
 
-    public Service01Stack(final Construct scope, final String id, final StackProps props, Cluster cluster) {
+    public Service01Stack(final Construct scope, final String id, final StackProps props, Cluster cluster, SnsTopic productEventsTopic) {
         super(scope, id, props);
 
-        ApplicationLoadBalancedFargateService service01 =
+        this.service01 =
                 ApplicationLoadBalancedFargateService.Builder.create(this, "ALB01")
                         .serviceName("service-01")
                         .cluster(cluster)
@@ -35,7 +45,7 @@ public class Service01Stack extends Stack {
                         .taskImageOptions(
                                 ApplicationLoadBalancedTaskImageOptions.builder()
                                         .containerName("aws_projeto01")
-                                        .image(ContainerImage.fromRegistry("rochards/java-app-aws-projeto01:2.0.0")) // caminho da imagem
+                                        .image(ContainerImage.fromRegistry("rochards/java-app-aws-projeto01:2.1.0")) // caminho da imagem
                                         // e tag do dockerhub
                                         .containerPort(8080) // porta da nossa aplicacao springboot dentro do container
                                         .logDriver(
@@ -52,7 +62,12 @@ public class Service01Stack extends Stack {
                                                                 .build()
                                                 )
                                         )
-                                        .environment(retrieveAndConfigureRdsStackParameters())
+                                        .environment(
+                                                joinEnvironments(
+                                                        retrieveAndConfigureRdsStackParameters(),
+                                                        configureSnsEnvironment(productEventsTopic.getTopic().getTopicArn())
+                                                )
+                                        )
                                         .build()
                         )
                         .publicLoadBalancer(true)
@@ -79,6 +94,8 @@ public class Service01Stack extends Stack {
                 .scaleInCooldown(Duration.seconds(60))
                 .scaleOutCooldown(Duration.seconds(60))
                 .build());
+
+        grantPublishRole(productEventsTopic);
     }
 
     private Map<String, String> retrieveAndConfigureRdsStackParameters() {
@@ -92,5 +109,27 @@ public class Service01Stack extends Stack {
         envVariables.put("SPRING_DATASOURCE_PASSWORD", Fn.importValue("rds-password"));
 
         return envVariables;
+    }
+
+    private Map<String, String> joinEnvironments(Map<String, String> env1, Map<String, String> env2) {
+        Map<String, String> envVariables = new HashMap<>();
+        envVariables.putAll(env1);
+        envVariables.putAll(env2);
+
+        return envVariables;
+    }
+
+    private Map<String, String> configureSnsEnvironment(String topicArn) {
+        Map<String, String> envVariables = new HashMap<>();
+        envVariables.put("AWS_REGION", "sa-east-1");
+        envVariables.put("PRODUCT_TOPIC_ARN", topicArn);
+
+        return envVariables;
+    }
+
+    private void grantPublishRole(SnsTopic productEventsTopic) {
+        /*  essa configuraçao vai criar uma policy dentro da nossa taskRole para poder dar permissão para a nossa
+        * aplicação publicar no tópico em questão*/
+        productEventsTopic.getTopic().grantPublish(Objects.requireNonNull(service01.getTaskDefinition().getTaskRole()));
     }
 }

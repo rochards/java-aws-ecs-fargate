@@ -18,6 +18,7 @@ public class SnsStack extends Stack {
         super(scope, id, props);
 
         this.productEventsTopic = createSnsTopic();
+        // ainda falta criar uma subscription para o meu topico
     }
 
     private SnsTopic createSnsTopic() {
