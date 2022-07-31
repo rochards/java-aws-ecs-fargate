@@ -9,5 +9,5 @@ import lombok.Setter;
 public class EnvelopeEventProduct {
 
     private EventType eventType;
-    private String data;
+    private EventProduct data;
 }

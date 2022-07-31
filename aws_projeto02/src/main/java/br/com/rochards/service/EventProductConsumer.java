@@ -30,8 +30,8 @@ public class EventProductConsumer {
     public void receiveEventProduct(TextMessage textMessage) throws JMSException, IOException {
         var snsMessage = mapper.readValue(textMessage.getText(), SnsMessage.class);
         var envelopeEventProduct = mapper.readValue(snsMessage.getMessage(), EnvelopeEventProduct.class);
-        var eventProduct = mapper.readValue(envelopeEventProduct.getData(), EventProduct.class);
 
-        LOG.info("Evento de produto recebido - Evento: {}, ID do produto: {}", envelopeEventProduct.getEventType(), eventProduct.getId());
+        LOG.info("Evento de produto recebido - Evento: {}, ID do produto: {}",
+                envelopeEventProduct.getEventType(), envelopeEventProduct.getData().getId());
     }
 }

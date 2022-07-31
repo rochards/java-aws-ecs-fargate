@@ -39,7 +39,7 @@ public class ProductPublisher {
         optEnvelopeString.ifPresentOrElse(
                 envelopeString -> {
                     snsClient.publish(topicEventProduct.getTopicArn(), envelopeString);
-                    LOG.info("Evento de produto publicado com sucesso no SNS");
+                    LOG.info("Evento de produto publicado com sucesso no SNS: {}", envelopeString);
                 },
                 () -> LOG.error("Falha ao publicar evento de produto no SNS")
         );
