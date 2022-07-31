@@ -15,25 +15,30 @@ import software.amazon.awscdk.services.ecs.patterns.ApplicationLoadBalancedFarga
 import software.amazon.awscdk.services.ecs.patterns.ApplicationLoadBalancedTaskImageOptions;
 import software.amazon.awscdk.services.elasticloadbalancingv2.HealthCheck;
 import software.amazon.awscdk.services.logs.LogGroup;
+import software.amazon.awscdk.services.sqs.Queue;
 import software.constructs.Construct;
+
+import java.util.HashMap;
+import java.util.Map;
 
 public class Service02Stack extends Stack {
 
     private final ApplicationLoadBalancedFargateService service02;
 
-    public Service02Stack(Construct scope, String id, Cluster cluster) {
-        this(scope, id, null, cluster);
+    public Service02Stack(Construct scope, String id, Cluster cluster, Queue productEventsQueue) {
+        this(scope, id, null, cluster, productEventsQueue);
     }
 
-    public Service02Stack(Construct scope, String id, StackProps props, Cluster cluster) {
+    public Service02Stack(Construct scope, String id, StackProps props, Cluster cluster, Queue productEventsQueue) {
         super(scope, id, props);
 
-        this.service02 = configureService(cluster);
+        this.service02 = configureService(cluster, productEventsQueue.getQueueName());
         configureHealthCheck();
         configureAutoScaling();
+        grantConsumptionRole(productEventsQueue);
     }
 
-    private ApplicationLoadBalancedFargateService configureService(Cluster cluster) {
+    private ApplicationLoadBalancedFargateService configureService(Cluster cluster, String productEventsQueueName) {
         return ApplicationLoadBalancedFargateService.Builder.create(this, "ALB02")
                 .serviceName("service-02")
                 .cluster(cluster)
@@ -44,8 +49,8 @@ public class Service02Stack extends Stack {
                 .taskImageOptions(
                         ApplicationLoadBalancedTaskImageOptions.builder()
                                 .containerName("aws_projeto02")
-                                .image(ContainerImage.fromRegistry("rochards/java-app-aws-projeto02:1.0.0"))
-                                .containerPort(8080)
+                                .image(ContainerImage.fromRegistry("rochards/java-app-aws-projeto02:1.1.0"))
+                                .containerPort(9090)
                                 .logDriver(
                                         LogDriver.awsLogs(
                                                 AwsLogDriverProps.builder()
@@ -59,6 +64,7 @@ public class Service02Stack extends Stack {
                                                         .build()
                                         )
                                 )
+                                .environment(configureSqsEnvironment(productEventsQueueName))
                                 .build()
                 )
                 .publicLoadBalancer(true)
@@ -91,5 +97,15 @@ public class Service02Stack extends Stack {
                         .scaleOutCooldown(Duration.seconds(60))
                         .build()
         );
+    }
+
+    private Map<String, String> configureSqsEnvironment(String queueName) {
+        Map<String, String> envVariables = new HashMap<>();
+        envVariables.put("PRODUCT_EVENTS_QUEUE_NAME", queueName);
+        return envVariables;
+    }
+
+    private void grantConsumptionRole(Queue productEventsQueue) {
+        productEventsQueue.grantConsumeMessages(service02.getTaskDefinition().getTaskRole());
     }
 }

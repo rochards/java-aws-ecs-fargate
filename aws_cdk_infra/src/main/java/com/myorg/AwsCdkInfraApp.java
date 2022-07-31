@@ -11,7 +11,7 @@ public class AwsCdkInfraApp {
         App app = new App();
 
         /* O deploy completo está assim:
-        * $ cdk deploy --parameters Rds:databasePassword=.,0374koar872jkas Rds Vpc Cluster Service01
+        * $ cdk deploy --parameters Rds:databasePassword=.,0374koar872jkas Rds Vpc Cluster Sns Sqs Service01 Service02
         * */
 
         VpcStack vpcStack = new VpcStack(app, "Vpc");
@@ -30,6 +30,9 @@ public class AwsCdkInfraApp {
 
         SnsStack snsStack = new SnsStack(app, "Sns");
 
+        SqsStack sqsStack = new SqsStack(app, "Sqs", snsStack.getProductEventsTopic());
+        sqsStack.addDependency(snsStack);
+
         // depois de criado, vá ao ECS e clique no cluster criado para ver os serviços
         Service01Stack service01Stack =
                 new Service01Stack(app, "Service01", clusterStack.getCluster(), snsStack.getProductEventsTopic());
@@ -37,8 +40,10 @@ public class AwsCdkInfraApp {
         service01Stack.addDependency(rdsStack);
         service01Stack.addDependency(snsStack);
 
-        Service02Stack service02Stack = new Service02Stack(app, "Service02", clusterStack.getCluster());
+        Service02Stack service02Stack =
+                new Service02Stack(app, "Service02", clusterStack.getCluster(), sqsStack.getProductEventsQueue());
         service02Stack.addDependency(clusterStack);
+        service01Stack.addDependency(sqsStack);
 
         app.synth();
     }
