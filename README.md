@@ -9,7 +9,11 @@ Inicializar um projeto cdk com java: `cdk init app --language java`. Obs.: o nom
 
 * **Amazon ECS + Fargate**: o *Elastic Container Service* é um serviço de orquestração de *containers*. O *Fargate* vem para para nos livrar da preocupação de gerenciar máquinas EC2 para o funcionamento do ECS;
 
-* **Aplication Load Balancer**: recurso que permite dividir as requisições entre as instâncias das aplicações. Também foi configurado um **_target group_** para monitorar a saúde das instâncias em execução, assim o *load balancer* pode decidir parar de enviar requesições para instâncias "não saudáveis".
+* **Aplication Load Balancer**: recurso que permite dividir as requisições entre as instâncias das aplicações. Também foi configurado um **_target group_** para monitorar a saúde das instâncias em execução, assim o *load balancer* pode decidir parar de enviar requesições para instâncias "não saudáveis";
+
+* **SNS**: o *Simple Notification Service* é um serviço de mensagens totalmente gerenciado pela AWS. Um *publisher* ou publicador, envia suas mensagens para o SNS que posteriormente serão consumidas por um ou mais *subscribers* ou assinantes;
+
+* **SQS**: o *Simple Queue Service* é ums serviço de fila totalmente gerenciado pela AWS. Um *publisher* envia mensagens para a fila e um *consumer* precisa ficar consultando essa fila para verificar a existência de novas mensagens. O SQS suporta dois tipos de filas: [standard](https://docs.aws.amazon.com/AWSSimpleQueueService/latest/SQSDeveloperGuide/standard-queues.html) e [FIFO](https://docs.aws.amazon.com/AWSSimpleQueueService/latest/SQSDeveloperGuide/FIFO-queues.html). Neste projeto utilizamos a *standard*. Em sistemas em que a duplicidade de mensagens seria um problema, a FIFO resolveria essa questão.
 
 
 ### Alguns conceitos
