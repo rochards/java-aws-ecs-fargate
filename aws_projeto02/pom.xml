@@ -31,6 +31,30 @@
 			<artifactId>spring-boot-starter-test</artifactId>
 			<scope>test</scope>
 		</dependency>
+
+		<dependency>
+			<groupId>com.amazonaws</groupId>
+			<artifactId>aws-java-sdk-sqs</artifactId>
+			<version>1.12.239</version>
+		</dependency>
+
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-jms</artifactId> <!-- para criar threads mais facilmente -->
+		</dependency>
+
+		<dependency>
+			<groupId>com.amazonaws</groupId> <!-- para se integrar com o spring-jms -->
+			<artifactId>amazon-sqs-java-messaging-lib</artifactId>
+			<version>1.1.0</version>
+		</dependency>
+
+		<dependency>
+			<groupId>org.projectlombok</groupId>
+			<artifactId>lombok</artifactId>
+			<version>1.18.24</version>
+		</dependency>
+
 	</dependencies>
 
 	<build>
