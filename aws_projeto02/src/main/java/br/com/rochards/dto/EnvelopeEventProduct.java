@@ -1,4 +1,4 @@
-package br.com.rochards.model;
+package br.com.rochards.dto;
 
 import br.com.rochards.enums.EventType;
 import lombok.Getter;

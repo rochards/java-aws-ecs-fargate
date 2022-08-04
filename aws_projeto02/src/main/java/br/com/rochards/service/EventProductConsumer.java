@@ -1,8 +1,7 @@
 package br.com.rochards.service;
 
-import br.com.rochards.model.EnvelopeEventProduct;
-import br.com.rochards.model.EventProduct;
-import br.com.rochards.model.SnsMessage;
+import br.com.rochards.dto.EnvelopeEventProduct;
+import br.com.rochards.dto.SnsMessage;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

@@ -1,4 +1,4 @@
-package br.com.rochards.model;
+package br.com.rochards.dto;
 
 import lombok.Getter;
 import lombok.Setter;
