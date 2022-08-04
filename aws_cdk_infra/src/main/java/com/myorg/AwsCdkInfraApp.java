@@ -40,6 +40,8 @@ public class AwsCdkInfraApp {
         service01Stack.addDependency(rdsStack);
         service01Stack.addDependency(snsStack);
 
+        DynamoDBStack dynamoDBStack = new DynamoDBStack(app, "DynamoDBStack");
+
         Service02Stack service02Stack =
                 new Service02Stack(app, "Service02", clusterStack.getCluster(), sqsStack.getProductEventsQueue());
         service02Stack.addDependency(clusterStack);

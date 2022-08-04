@@ -3,7 +3,7 @@
 Inicializar um projeto cdk com java: `cdk init app --language java`. Obs.: o nome da pasta sob a qual o comando acima é executado, determina o nome da aplicação criada.
 
 
-### Recursos criados no curso
+### Recursos/Serviços utilizados no curso
 
 * **Amazon VPC**: ou também *Amazon Virtual Private Cloud*, permite criar uma rede virtual onde os componentes dentro dela podem ficar isolados e protegidos de acessos externos. No entanto, portas e protocolos podem ser abertos para a internet por meio de regras de segurança;
 
@@ -13,7 +13,11 @@ Inicializar um projeto cdk com java: `cdk init app --language java`. Obs.: o nom
 
 * **SNS**: o *Simple Notification Service* é um serviço de mensagens totalmente gerenciado pela AWS. Um *publisher* ou publicador, envia suas mensagens para o SNS que posteriormente serão consumidas por um ou mais *subscribers* ou assinantes;
 
-* **SQS**: o *Simple Queue Service* é ums serviço de fila totalmente gerenciado pela AWS. Um *publisher* envia mensagens para a fila e um *consumer* precisa ficar consultando essa fila para verificar a existência de novas mensagens. O SQS suporta dois tipos de filas: [standard](https://docs.aws.amazon.com/AWSSimpleQueueService/latest/SQSDeveloperGuide/standard-queues.html) e [FIFO](https://docs.aws.amazon.com/AWSSimpleQueueService/latest/SQSDeveloperGuide/FIFO-queues.html). Neste projeto utilizamos a *standard*. Em sistemas em que a duplicidade de mensagens seria um problema, a FIFO resolveria essa questão.
+* **SQS**: o *Simple Queue Service* é ums serviço de fila totalmente gerenciado pela AWS. Um *publisher* envia mensagens para a fila e um *consumer* precisa ficar consultando essa fila para verificar a existência de novas mensagens. O SQS suporta dois tipos de filas: [standard](https://docs.aws.amazon.com/AWSSimpleQueueService/latest/SQSDeveloperGuide/standard-queues.html) e [FIFO](https://docs.aws.amazon.com/AWSSimpleQueueService/latest/SQSDeveloperGuide/FIFO-queues.html). Neste projeto utilizamos a *standard*. Em sistemas em que a duplicidade de mensagens seria um problema, a FIFO resolveria essa questão;
+
+* **RDS**: 
+
+* **DynamoDB**: é um serviço de banco de dados NoSQL altamente escalável gerenciado pela AWS. Uma **tabela** no DynamoDB é uma coleção de itens, cada **item** por sua vez é uma coleção de **atributos**. Os dados na tabela podem ser unicamente identificado utilizando a combinação de uma *partition key* e uma *sort key*, essa última é opcional.
 
 
 ### Alguns conceitos
