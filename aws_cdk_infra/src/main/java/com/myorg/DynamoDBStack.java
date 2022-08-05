@@ -11,7 +11,7 @@ import software.constructs.Construct;
 
 public class DynamoDBStack extends Stack {
 
-    private Table productEventsTable;
+    private final Table productEventsTable;
 
     public DynamoDBStack(Construct scope, String id) {
         this(scope, id, null);

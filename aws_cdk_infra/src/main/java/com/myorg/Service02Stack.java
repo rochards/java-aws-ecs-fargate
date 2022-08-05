@@ -5,6 +5,7 @@ import software.amazon.awscdk.RemovalPolicy;
 import software.amazon.awscdk.Stack;
 import software.amazon.awscdk.StackProps;
 import software.amazon.awscdk.services.applicationautoscaling.EnableScalingProps;
+import software.amazon.awscdk.services.dynamodb.Table;
 import software.amazon.awscdk.services.ecs.AwsLogDriverProps;
 import software.amazon.awscdk.services.ecs.Cluster;
 import software.amazon.awscdk.services.ecs.ContainerImage;
@@ -25,17 +26,19 @@ public class Service02Stack extends Stack {
 
     private final ApplicationLoadBalancedFargateService service02;
 
-    public Service02Stack(Construct scope, String id, Cluster cluster, Queue productEventsQueue) {
-        this(scope, id, null, cluster, productEventsQueue);
+    public Service02Stack(Construct scope, String id, Cluster cluster, Queue productEventsQueue, Table productEventsTable) {
+        this(scope, id, null, cluster, productEventsQueue, productEventsTable);
     }
 
-    public Service02Stack(Construct scope, String id, StackProps props, Cluster cluster, Queue productEventsQueue) {
+    public Service02Stack(Construct scope, String id, StackProps props, Cluster cluster, Queue productEventsQueue,
+                          Table productEventsTable) {
         super(scope, id, props);
 
         this.service02 = configureService(cluster, productEventsQueue.getQueueName());
         configureHealthCheck();
         configureAutoScaling();
         grantConsumptionRole(productEventsQueue);
+        grantDynamoDBReadWriteRole(productEventsTable);
     }
 
     private ApplicationLoadBalancedFargateService configureService(Cluster cluster, String productEventsQueueName) {
@@ -107,5 +110,9 @@ public class Service02Stack extends Stack {
 
     private void grantConsumptionRole(Queue productEventsQueue) {
         productEventsQueue.grantConsumeMessages(service02.getTaskDefinition().getTaskRole());
+    }
+
+    private void grantDynamoDBReadWriteRole(Table productEventsTable) {
+        productEventsTable.grantReadWriteData(service02.getTaskDefinition().getTaskRole());
     }
 }

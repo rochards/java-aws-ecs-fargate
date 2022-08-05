@@ -1,18 +1,16 @@
 package com.myorg;
 
 import software.amazon.awscdk.App;
-import software.amazon.awscdk.Environment;
-import software.amazon.awscdk.StackProps;
-
-import java.util.Arrays;
 
 public class AwsCdkInfraApp {
     public static void main(final String[] args) {
         App app = new App();
 
-        /* O deploy completo está assim:
-        * $ cdk deploy --parameters Rds:databasePassword=.,0374koar872jkas Rds Vpc Cluster Sns Sqs Service01 Service02
-        * */
+        /* O deploy completo pode ser feito por exemplo:
+         * $ cdk deploy --parameters Rds:databasePassword=.,0374koar872jkas Rds Vpc Cluster Sns Sqs DynamoDB Service01 Service02
+         * ou
+         * $ cdk deploy --all --parameters Rds:databasePassword=.,0374koar872jkas
+         * */
 
         VpcStack vpcStack = new VpcStack(app, "Vpc");
 
@@ -40,12 +38,13 @@ public class AwsCdkInfraApp {
         service01Stack.addDependency(rdsStack);
         service01Stack.addDependency(snsStack);
 
-        DynamoDBStack dynamoDBStack = new DynamoDBStack(app, "DynamoDBStack");
+        DynamoDBStack dynamoDBStack = new DynamoDBStack(app, "DynamoDB");
 
-        Service02Stack service02Stack =
-                new Service02Stack(app, "Service02", clusterStack.getCluster(), sqsStack.getProductEventsQueue());
+        Service02Stack service02Stack = new Service02Stack(app, "Service02", clusterStack.getCluster(),
+                sqsStack.getProductEventsQueue(), dynamoDBStack.getProductEventsTable());
         service02Stack.addDependency(clusterStack);
-        service01Stack.addDependency(sqsStack);
+        service02Stack.addDependency(sqsStack);
+        service02Stack.addDependency(dynamoDBStack);
 
         app.synth();
     }
