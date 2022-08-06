@@ -5,6 +5,10 @@ import br.com.rochards.model.EventProductLog;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Getter;
 
+import java.time.Instant;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+
 @Getter
 public class EventProductLogDto {
 
@@ -16,13 +20,17 @@ public class EventProductLogDto {
     private final long productId;
     private final String username;
     @JsonProperty("criadoEm")
-    private final long timestamp;
+    private LocalDateTime timestamp;
 
     public EventProductLogDto(EventProductLog eventProductLog) {
         this.code = eventProductLog.getPk();
         this.eventType = eventProductLog.getEventType();
         this.productId = eventProductLog.getProductId();
         this.username = eventProductLog.getUsername();
-        this.timestamp = eventProductLog.getTimestamp();
+        setTimestamp(eventProductLog.getTimestamp());
+    }
+
+    private void setTimestamp(long timestamp) {
+        this.timestamp = LocalDateTime.ofInstant(Instant.ofEpochMilli(timestamp), ZoneId.systemDefault());
     }
 }

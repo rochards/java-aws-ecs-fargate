@@ -15,7 +15,7 @@ import java.util.Objects;
 import java.util.stream.Collectors;
 
 @RestController
-@RequestMapping("/api")
+@RequestMapping("/api/v1")
 public class EventProductLogController {
 
     private static final Logger LOG = LoggerFactory.getLogger(EventProductLogController.class);
@@ -35,6 +35,8 @@ public class EventProductLogController {
 
         var eventProductLogList = Objects.isNull(eventType) ?
                 repository.findAllByPk(code) : repository.findAllByPkAndSkStartsWith(code, eventType);
+
+        LOG.info("Eventos encontrados: {}", eventProductLogList.size());
 
         return eventProductLogList
                 .stream()

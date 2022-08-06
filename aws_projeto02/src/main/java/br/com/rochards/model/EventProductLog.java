@@ -42,6 +42,7 @@ public class EventProductLog {
         setPk(partitionKey);
         setSk(sortKey + "_" + instant.toEpochMilli());
 
+        this.eventType = EventType.valueOf(sortKey);
         this.productId = productId;
         this.username = username;
         this.timestamp = instant.toEpochMilli();
