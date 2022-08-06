@@ -11,6 +11,6 @@ import java.util.List;
 public interface EventProductLogRepository extends CrudRepository<EventProductLog, EventProductKey> {
 
     // importante notar que Pk e Sk devem ser o nome do atributo (no case sensitive) lá na tabela do dynamodb
-    List<EventProductLog> findAllByPk(String code);
+    List<EventProductLog> findAllByPk(String code); // important que os getters e setters tbm sejam nomeados pk e sk
     List<EventProductLog> findAllByPkAndSkStartsWith(String code, String eventType);
 }

@@ -39,8 +39,8 @@ public class EventProductLog {
     public EventProductLog(String partitionKey, String sortKey, long productId, String username) {
         var instant = Instant.now();
 
-        setPartitionKey(partitionKey);
-        setSortKey(sortKey + "_" + instant.toEpochMilli());
+        setPk(partitionKey);
+        setSk(sortKey + "_" + instant.toEpochMilli());
 
         this.productId = productId;
         this.username = username;
@@ -49,11 +49,11 @@ public class EventProductLog {
     }
 
     @DynamoDBHashKey(attributeName = "pk")
-    public String getPartitionKey() {
+    public String getPk() {
         return Objects.nonNull(eventProductKey) ? eventProductKey.getPartitionKey() : null;
     }
 
-    public void setPartitionKey(String pk) {
+    public void setPk(String pk) {
         if (Objects.isNull(eventProductKey)) {
             this.eventProductKey = new EventProductKey();
         }
@@ -61,11 +61,11 @@ public class EventProductLog {
     }
 
     @DynamoDBRangeKey(attributeName = "sk")
-    public String getSortKey() {
+    public String getSk() {
         return Objects.nonNull(eventProductKey) ? eventProductKey.getSortKey() : null;
     }
 
-    public void setSortKey(String sk) {
+    public void setSk(String sk) {
         if (Objects.isNull(eventProductKey)) {
             this.eventProductKey = new EventProductKey();
         }
