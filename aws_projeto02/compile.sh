@@ -5,4 +5,4 @@ mvn clean package
 
 echo ""
 echo "==== Executando Dockerfile ===="
-docker build -t rochards/java-app-aws-projeto02:2.1.0 .
+docker build -t rochards/java-app-aws-projeto02:3.0.0 .
