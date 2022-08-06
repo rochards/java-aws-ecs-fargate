@@ -2,8 +2,8 @@ package br.com.rochards.aws_projeto01.service;
 
 import br.com.rochards.aws_projeto01.enums.EventType;
 import br.com.rochards.aws_projeto01.model.EnvelopeEventProduct;
-import br.com.rochards.aws_projeto01.model.Produto;
 import br.com.rochards.aws_projeto01.model.EventProduct;
+import br.com.rochards.aws_projeto01.model.Produto;
 import com.amazonaws.services.sns.AmazonSNS;
 import com.amazonaws.services.sns.model.Topic;
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -38,8 +38,9 @@ public class ProductPublisher {
 
         optEnvelopeString.ifPresentOrElse(
                 envelopeString -> {
-                    snsClient.publish(topicEventProduct.getTopicArn(), envelopeString);
-                    LOG.info("Evento de produto publicado com sucesso no SNS: {}", envelopeString);
+                    var publishResult = snsClient.publish(topicEventProduct.getTopicArn(), envelopeString);
+                    LOG.info("ID da mensagem={}. Evento de produto publicado com sucesso no SNS: {}",
+                            publishResult.getMessageId(), envelopeString);
                 },
                 () -> LOG.error("Falha ao publicar evento de produto no SNS")
         );

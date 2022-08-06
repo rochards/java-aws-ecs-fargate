@@ -52,7 +52,7 @@ public class Service02Stack extends Stack {
                 .taskImageOptions(
                         ApplicationLoadBalancedTaskImageOptions.builder()
                                 .containerName("aws_projeto02")
-                                .image(ContainerImage.fromRegistry("rochards/java-app-aws-projeto02:2.0.0"))
+                                .image(ContainerImage.fromRegistry("rochards/java-app-aws-projeto02:2.1.0"))
                                 .containerPort(9090)
                                 .logDriver(
                                         LogDriver.awsLogs(

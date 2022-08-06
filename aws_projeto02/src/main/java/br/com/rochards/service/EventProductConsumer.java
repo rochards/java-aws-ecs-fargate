@@ -36,8 +36,8 @@ public class EventProductConsumer {
         var envelopeEventProduct = mapper.readValue(snsMessage.getMessage(), EnvelopeEventProduct.class);
         var eventProduct = envelopeEventProduct.getData();
 
-        LOG.info("Evento de produto recebido - Evento: {}, ID do produto: {}",
-                envelopeEventProduct.getEventType(), eventProduct.getId());
+        LOG.info("ID da mensagem={}. Evento de produto recebido - Evento: {}, ID do produto: {}",
+                snsMessage.getMessageId(), envelopeEventProduct.getEventType(), eventProduct.getId());
 
         saveEventProduct(eventProduct, envelopeEventProduct.getEventType().name());
     }
@@ -46,7 +46,7 @@ public class EventProductConsumer {
         var eventProductLog =
                 new EventProductLog(eventProduct.getCodigo(), eventType, eventProduct.getId(), eventProduct.getUsername());
 
-        LOG.info("Salvando log de produtos no DynamoDB: {} ", eventProduct);
+        LOG.info("Salvando log de produtos no DynamoDB: {} ", eventProduct.toString());
 
         repository.save(eventProductLog);
 
