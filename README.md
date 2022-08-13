@@ -17,7 +17,9 @@ Inicializar um projeto cdk com java: `cdk init app --language java`. Obs.: o nom
 
 * **RDS**: 
 
-* **DynamoDB**: é um serviço de banco de dados NoSQL altamente escalável gerenciado pela AWS. Uma **tabela** no DynamoDB é uma coleção de itens, cada **item** por sua vez é uma coleção de **atributos**. Os dados na tabela podem ser unicamente identificado utilizando a combinação de uma *partition key* e uma *sort key*, essa última é opcional.
+* **DynamoDB**: é um serviço de banco de dados NoSQL altamente escalável gerenciado pela AWS. Uma **tabela** no DynamoDB é uma coleção de itens, cada **item** por sua vez é uma coleção de **atributos**. Os dados na tabela podem ser unicamente identificado utilizando a combinação de uma *partition key* e uma *sort key*, essa última é opcional;
+
+* **S3**: o *Simple Storage Service* é um serviço totalmente gerenciado pela AWS para armazenamento de arquivos. O S3 armazena dados como objetos dentro de *buckets*. Um *bucket*, por sua vez é formado por um arquivo e metadados (sendo esse opcional) que descrevem esse arquivo.
 
 
 ### Alguns conceitos
