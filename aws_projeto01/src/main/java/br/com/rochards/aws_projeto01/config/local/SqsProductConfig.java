@@ -18,16 +18,16 @@ import org.springframework.context.annotation.Profile;
 // a classe abaixo existe para fins de testes utilizando a localstack
 @Configuration
 @Profile("local")
-public class SqsConfig {
+public class SqsProductConfig {
 
-    private static final Logger LOG = LoggerFactory.getLogger(SqsConfig.class);
+    private static final Logger LOG = LoggerFactory.getLogger(SqsProductConfig.class);
 
     private final AmazonSNS snsClient;
     private final Topic topicEventProduct;
     private final AmazonSQS sqsClient;
 
     @Autowired
-    public SqsConfig(AmazonSNS snsClient, Topic topicEventProduct) {
+    public SqsProductConfig(AmazonSNS snsClient, Topic topicEventProduct) {
         this.snsClient = snsClient;
         this.topicEventProduct = topicEventProduct;
         this.sqsClient = sqsClientConfig();

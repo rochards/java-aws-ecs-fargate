@@ -16,14 +16,14 @@ import org.springframework.context.annotation.Profile;
 // a classe abaixo existe para fins de testes utilizando a localstack
 @Configuration
 @Profile("local")
-public class SnsConfig {
+public class SnsProductConfig {
 
-    private static final Logger LOG = LoggerFactory.getLogger(SnsConfig.class);
+    private static final Logger LOG = LoggerFactory.getLogger(SnsProductConfig.class);
 
     private final AmazonSNS snsClient;
     private final String productTopicArn;
 
-    public SnsConfig() {
+    public SnsProductConfig() {
         this.snsClient = snsClientConfig();
         this.productTopicArn = createTopic();
 
