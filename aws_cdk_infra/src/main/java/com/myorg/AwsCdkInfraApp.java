@@ -31,12 +31,16 @@ public class AwsCdkInfraApp {
         SqsStack sqsStack = new SqsStack(app, "Sqs", snsStack.getProductEventsTopic());
         sqsStack.addDependency(snsStack);
 
+        InvoiceStack invoiceStack = new InvoiceStack(app, "InvoiceStack");
+
         // depois de criado, vá ao ECS e clique no cluster criado para ver os serviços
         Service01Stack service01Stack =
-                new Service01Stack(app, "Service01", clusterStack.getCluster(), snsStack.getProductEventsTopic());
+                new Service01Stack(app, "Service01", clusterStack.getCluster(), snsStack.getProductEventsTopic(),
+                        invoiceStack.getInvoiceBucket(), invoiceStack.getS3InvoiceQueue());
         service01Stack.addDependency(clusterStack);
         service01Stack.addDependency(rdsStack);
         service01Stack.addDependency(snsStack);
+        service01Stack.addDependency(invoiceStack);
 
         DynamoDBStack dynamoDBStack = new DynamoDBStack(app, "DynamoDB");
 

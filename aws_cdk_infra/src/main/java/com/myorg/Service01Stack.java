@@ -17,8 +17,11 @@ import software.amazon.awscdk.services.ecs.patterns.ApplicationLoadBalancedTaskI
 import software.amazon.awscdk.services.elasticloadbalancingv2.HealthCheck;
 import software.amazon.awscdk.services.events.targets.SnsTopic;
 import software.amazon.awscdk.services.logs.LogGroup;
+import software.amazon.awscdk.services.s3.Bucket;
+import software.amazon.awscdk.services.sqs.Queue;
 import software.constructs.Construct;
 
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
@@ -27,11 +30,13 @@ public class Service01Stack extends Stack {
 
     private final ApplicationLoadBalancedFargateService service01;
 
-    public Service01Stack(final Construct scope, final String id, Cluster cluster, SnsTopic productEventsTopic) {
-        this(scope, id, null, cluster, productEventsTopic);
+    public Service01Stack(final Construct scope, final String id, Cluster cluster, SnsTopic productEventsTopic,
+                          Bucket invoiceBucket, Queue invoiceQueue) {
+        this(scope, id, null, cluster, productEventsTopic, invoiceBucket, invoiceQueue);
     }
 
-    public Service01Stack(final Construct scope, final String id, final StackProps props, Cluster cluster, SnsTopic productEventsTopic) {
+    public Service01Stack(final Construct scope, final String id, final StackProps props, Cluster cluster,
+                          SnsTopic productEventsTopic, Bucket invoiceBucket, Queue invoiceQueue) {
         super(scope, id, props);
 
         this.service01 =
@@ -65,7 +70,8 @@ public class Service01Stack extends Stack {
                                         .environment(
                                                 joinEnvironments(
                                                         retrieveAndConfigureRdsStackParameters(),
-                                                        configureSnsEnvironment(productEventsTopic.getTopic().getTopicArn())
+                                                        configureSnsEnvironment(productEventsTopic.getTopic().getTopicArn()),
+                                                        configureInvoiceStackEnvironment(invoiceBucket.getBucketName(), invoiceQueue.getQueueName())
                                                 )
                                         )
                                         .build()
@@ -96,6 +102,15 @@ public class Service01Stack extends Stack {
                 .build());
 
         grantPublishRole(productEventsTopic);
+        grantReadWriteRole(invoiceBucket);
+        grantConsumeRole(invoiceQueue);
+    }
+
+    @SafeVarargs
+    private final Map<String, String> joinEnvironments(Map<String, String>... envs) {
+        Map<String, String> envVariables = new HashMap<>();
+        Arrays.stream(envs).forEach(envVariables::putAll);
+        return envVariables;
     }
 
     private Map<String, String> retrieveAndConfigureRdsStackParameters() {
@@ -111,14 +126,6 @@ public class Service01Stack extends Stack {
         return envVariables;
     }
 
-    private Map<String, String> joinEnvironments(Map<String, String> env1, Map<String, String> env2) {
-        Map<String, String> envVariables = new HashMap<>();
-        envVariables.putAll(env1);
-        envVariables.putAll(env2);
-
-        return envVariables;
-    }
-
     private Map<String, String> configureSnsEnvironment(String topicArn) {
         Map<String, String> envVariables = new HashMap<>();
         envVariables.put("AWS_REGION", "sa-east-1");
@@ -127,9 +134,25 @@ public class Service01Stack extends Stack {
         return envVariables;
     }
 
+    private Map<String, String> configureInvoiceStackEnvironment(String bucketInvoiceName, String queueInvoiceEventsName) {
+        Map<String, String> envVariables = new HashMap<>();
+        envVariables.put("BUCKET_INVOICE_NAME", bucketInvoiceName);
+        envVariables.put("QUEUE_INVOICE_EVENTS_NAME", queueInvoiceEventsName);
+
+        return envVariables;
+    }
+
     private void grantPublishRole(SnsTopic productEventsTopic) {
         /*  essa configuraçao vai criar uma policy dentro da nossa taskRole para poder dar permissão para a nossa
-        * aplicação publicar no tópico em questão*/
+         * aplicação publicar no tópico em questão*/
         productEventsTopic.getTopic().grantPublish(Objects.requireNonNull(service01.getTaskDefinition().getTaskRole()));
+    }
+
+    private void grantReadWriteRole(Bucket invoiceBucket) {
+        invoiceBucket.grantReadWrite(service01.getTaskDefinition().getTaskRole());
+    }
+
+    private void grantConsumeRole(Queue invoiceQueue) {
+        invoiceQueue.grantConsumeMessages(service01.getTaskDefinition().getTaskRole());
     }
 }
