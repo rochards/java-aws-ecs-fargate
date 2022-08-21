@@ -1,0 +1,286 @@
+{
+	"info": {
+		"_postman_id": "9a391311-2069-4903-8122-037352a53fc4",
+		"name": "Udemy - Java AWS ECS Fargate",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "S01 - 1 URL Bucket",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"var jsonData = pm.response.json();\r",
+							"pm.environment.set(\"bucket_put\", jsonData.url);"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"url": {
+					"raw": "{{url_service01}}/api/v1/invoices",
+					"host": [
+						"{{url_service01}}"
+					],
+					"path": [
+						"api",
+						"v1",
+						"invoices"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "S01 - 2 Envia arquivo para o Bucket",
+			"request": {
+				"method": "PUT",
+				"header": [],
+				"body": {
+					"mode": "file",
+					"file": {
+						"src": "/C:/Users/rodri/Desktop/invoice.txt"
+					}
+				},
+				"url": {
+					"raw": "{{bucket_put}}",
+					"host": [
+						"{{bucket_put}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "S01 - Busca todas invoices",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{url_service01}}/api/v1/invoices",
+					"host": [
+						"{{url_service01}}"
+					],
+					"path": [
+						"api",
+						"v1",
+						"invoices"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "S01 - Health",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{url_service01}}/actuator/health",
+					"host": [
+						"{{url_service01}}"
+					],
+					"path": [
+						"actuator",
+						"health"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "S01 - Salva novo produto",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"nome\": \"Effective Java\",\r\n    \"preco\": \"400.00\",\r\n    \"codigo\": \"COD00009\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{url_service01}}/api/v1/produtos",
+					"host": [
+						"{{url_service01}}"
+					],
+					"path": [
+						"api",
+						"v1",
+						"produtos"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "S01 - Consulta produto por id",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{url_service01}}/api/v1/produtos/1",
+					"host": [
+						"{{url_service01}}"
+					],
+					"path": [
+						"api",
+						"v1",
+						"produtos",
+						"1"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "S01 - Consulta tods os produtos",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{url_service01}}/api/v1/produtos",
+					"host": [
+						"{{url_service01}}"
+					],
+					"path": [
+						"api",
+						"v1",
+						"produtos"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "S01 - Atualiza produto por id",
+			"request": {
+				"method": "PUT",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"nome\": \"Livro Java 11\",\r\n    \"preco\": \"400.00\",\r\n    \"codigo\": \"COD00011\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{url_service01}}/api/v1/produtos/3",
+					"host": [
+						"{{url_service01}}"
+					],
+					"path": [
+						"api",
+						"v1",
+						"produtos",
+						"3"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "S01 - Consulta produto por codigo",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{url_service01}}/api/v1/produtos/codigo/COD00002",
+					"host": [
+						"{{url_service01}}"
+					],
+					"path": [
+						"api",
+						"v1",
+						"produtos",
+						"codigo",
+						"COD00002"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "S02 - Health",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{url_service02}}/actuator/health",
+					"host": [
+						"{{url_service02}}"
+					],
+					"path": [
+						"actuator",
+						"health"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "S02 - Consulta eventos por codigo do produto",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{url_service02}}/api/v1/eventos?codigoProduto=COD00011",
+					"host": [
+						"{{url_service02}}"
+					],
+					"path": [
+						"api",
+						"v1",
+						"eventos"
+					],
+					"query": [
+						{
+							"key": "codigoProduto",
+							"value": "COD00011"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "S02 - Consulta eventos por codigoProduto e tipoEvento",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{url_service02}}/api/v1/eventos?codigoProduto=COD00011&tipoEvento=PRODUTO_ATUALIZADO",
+					"host": [
+						"{{url_service02}}"
+					],
+					"path": [
+						"api",
+						"v1",
+						"eventos"
+					],
+					"query": [
+						{
+							"key": "codigoProduto",
+							"value": "COD00011"
+						},
+						{
+							"key": "tipoEvento",
+							"value": "PRODUTO_ATUALIZADO"
+						}
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}

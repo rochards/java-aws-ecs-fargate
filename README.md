@@ -1,5 +1,7 @@
 
 
+Este repositório é o resultado do curso [Criando microsserviços em Java com AWS ECS Fargate e AWS CDK](https://www.udemy.com/course/aws-ecs-fargate-java/) que realizei.
+
 Inicializar um projeto cdk com java: `cdk init app --language java`. Obs.: o nome da pasta sob a qual o comando acima é executado, determina o nome da aplicação criada.
 
 
@@ -41,6 +43,7 @@ Inicializar um projeto cdk com java: `cdk init app --language java`. Obs.: o nom
 - Execute o arquivo `compile.sh` que está na raiz do projeto;
   - OBS.: esse arquivo executa os testes do *maven*, então é preciso ter um banco de dados local para não ser lançada uma exceção ao subir a aplicação Spring.
 - Execute o arquivo `run-container.sh` também presente na raiz do projeto.
+- Na raiz do projeto se encontram as *collections* do Postman para entender quais os endpoints disponíveis na aplicação.
 
 ### Como fazer o *deploy* da infraestrutura, descrita na pasta `aws_cdk_infra`, na AWS
 
